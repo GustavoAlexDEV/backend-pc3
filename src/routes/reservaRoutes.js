@@ -26,4 +26,17 @@ router.get('/relatorios/destinos', (req, res) => {
     res.json(ReservaDAO.getRelatorioDestinos());
 });
 
+// Adicione as rotas
+router.delete('/:id', (req, res) => {
+    const sucesso = ReservaDAO.delete(req.params.id);
+    if (sucesso) res.status(204).send();
+    else res.status(404).json({ error: 'Reserva não encontrada' });
+});
+
+router.put('/:id', (req, res) => {
+    const atualizado = ReservaDAO.update(req.params.id, req.body);
+    if (atualizado) res.json(atualizado);
+    else res.status(404).json({ error: 'Reserva não encontrada' });
+});
+
 module.exports = router;

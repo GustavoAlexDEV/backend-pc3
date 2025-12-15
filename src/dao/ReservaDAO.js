@@ -33,5 +33,30 @@ class ReservaDAO {
         
         return Object.values(relatorio);
     }
+    // Adicione estes métodos na classe ReservaDAO
+    delete(id) {
+        const index = db.reservas.findIndex(r => r.id === id);
+        if (index !== -1) {
+            db.reservas.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+
+    update(id, dados) {
+        const index = db.reservas.findIndex(r => r.id === id);
+        if (index !== -1) {
+            // Mantém o ID e DataReserva originais, atualiza o resto
+            const original = db.reservas[index];
+            db.reservas[index] = { 
+                ...original, 
+                clienteId: dados.clienteId, 
+                pacoteId: dados.pacoteId, 
+                valorPago: parseFloat(dados.valorPago)
+            }; 
+            return db.reservas[index];
+        }
+        return null;
+    }
 }
 module.exports = new ReservaDAO();
