@@ -1,8 +1,8 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto'); // Mudou aqui
 
 class Cliente {
     constructor(nome, email, telefone) {
-        this.id = uuidv4();
+        this.id = randomUUID(); // Mudou aqui
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;

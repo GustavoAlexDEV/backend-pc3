@@ -1,8 +1,8 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto'); 
 
 class Pacote {
     constructor(destino, preco, dataIda, dataVolta) {
-        this.id = uuidv4();
+        this.id = randomUUID(); // Aqui chamamos a função nativa
         this.destino = destino;
         this.preco = parseFloat(preco);
         this.dataIda = dataIda;
