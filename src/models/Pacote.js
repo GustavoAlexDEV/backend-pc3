@@ -1,16 +1,19 @@
 const mongoose = require('mongoose');
 
-const ReservaSchema = new mongoose.Schema({
-    clienteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true },
-    pacoteId: { type: mongoose.Schema.Types.ObjectId, ref: 'Pacote', required: true },
-    valorPago: { type: Number, required: true },
-    dataReserva: { type: Date, default: Date.now }
+const PacoteSchema = new mongoose.Schema({
+    destino: { type: String, required: true },
+    preco: { type: Number, required: true },
+    dataIda: { type: String, required: true }, 
+    dataVolta: { type: String, required: true }
 });
 
-ReservaSchema.set('toJSON', {
+PacoteSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) { delete ret._id  }
 });
 
-module.exports = mongoose.models.Reserva || mongoose.model('Reserva', ReservaSchema);
+
+const Pacote = mongoose.models.Pacote || mongoose.model('Pacote', PacoteSchema);
+
+module.exports = Pacote;
