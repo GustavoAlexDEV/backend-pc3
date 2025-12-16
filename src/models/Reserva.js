@@ -1,8 +1,8 @@
-const { randomUUID } = require('crypto'); // Mudou aqui
+const { randomUUID } = require('crypto'); 
 
 class Reserva {
     constructor(clienteId, pacoteId, valorPago) {
-        this.id = randomUUID(); // Mudou aqui
+        this.id = randomUUID();
         this.clienteId = clienteId;
         this.pacoteId = pacoteId;
         this.valorPago = parseFloat(valorPago);

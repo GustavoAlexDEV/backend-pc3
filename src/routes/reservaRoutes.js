@@ -1,42 +1,47 @@
 const express = require('express');
 const router = express.Router();
 const ReservaDAO = require('../dao/ReservaDAO');
-const ClienteDAO = require('../dao/ClienteDAO');
-const PacoteDAO = require('../dao/PacoteDAO');
-const Reserva = require('../models/Reserva');
 
-router.post('/', (req, res) => {
-    const { clienteId, pacoteId, valorPago } = req.body;
 
-    if (!ClienteDAO.findById(clienteId) || !PacoteDAO.findById(pacoteId)) {
-        return res.status(404).json({ error: 'Cliente ou Pacote não encontrados.' });
+router.get('/', async (req, res) => { 
+    try {
+        const dados = await ReservaDAO.findAllEnriched();
+        res.json(dados);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar reservas' });
     }
-
-    const novaReserva = new Reserva(clienteId, pacoteId, valorPago);
-    const criada = ReservaDAO.create(novaReserva);
-    res.status(201).json(criada);
 });
 
-router.get('/', (req, res) => {
-    res.json(ReservaDAO.findAllEnriched());
+
+router.post('/', async (req, res) => { 
+    try {
+        const criado = await ReservaDAO.create(req.body);
+        res.status(201).json(criado);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao criar reserva. Verifique os IDs.' });
+    }
 });
 
-// Rota específica do Relatório
-router.get('/relatorios/destinos', (req, res) => {
-    res.json(ReservaDAO.getRelatorioDestinos());
+
+router.delete('/:id', async (req, res) => { 
+    try {
+        const sucesso = await ReservaDAO.delete(req.params.id);
+        if (sucesso) res.status(204).send();
+        else res.status(404).json({ error: 'Reserva não encontrada' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao excluir' });
+    }
 });
 
-// Adicione as rotas
-router.delete('/:id', (req, res) => {
-    const sucesso = ReservaDAO.delete(req.params.id);
-    if (sucesso) res.status(204).send();
-    else res.status(404).json({ error: 'Reserva não encontrada' });
-});
 
-router.put('/:id', (req, res) => {
-    const atualizado = ReservaDAO.update(req.params.id, req.body);
-    if (atualizado) res.json(atualizado);
-    else res.status(404).json({ error: 'Reserva não encontrada' });
+router.put('/:id', async (req, res) => { 
+    try {
+        const atualizado = await ReservaDAO.update(req.params.id, req.body);
+        if (atualizado) res.json(atualizado);
+        else res.status(404).json({ error: 'Reserva não encontrada' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao atualizar' });
+    }
 });
 
 module.exports = router;

@@ -1,17 +1,45 @@
 const express = require('express');
 const router = express.Router();
 const PacoteDAO = require('../dao/PacoteDAO');
-const Pacote = require('../models/Pacote');
 
-router.post('/', (req, res) => {
-    const { destino, preco, dataIda, dataVolta } = req.body;
-    const novoPacote = new Pacote(destino, preco, dataIda, dataVolta);
-    const criado = PacoteDAO.create(novoPacote);
-    res.status(201).json(criado);
+
+router.post('/', async (req, res) => {
+    try {
+        const criado = await PacoteDAO.create(req.body);
+        res.status(201).json(criado);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao criar pacote' });
+    }
 });
 
-router.get('/', (req, res) => {
-    res.json(PacoteDAO.findAll());
+router.get('/', async (req, res) => {
+    try {
+        const lista = await PacoteDAO.findAll();
+        res.json(lista);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao buscar pacotes' });
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const sucesso = await PacoteDAO.delete(req.params.id);
+        if (sucesso) res.status(204).send();
+        else res.status(404).json({ error: 'Pacote não encontrado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao excluir' });
+    }
+});
+
+
+router.put('/:id', async (req, res) => {
+    try {
+        const atualizado = await PacoteDAO.update(req.params.id, req.body);
+        if (atualizado) res.json(atualizado);
+        else res.status(404).json({ error: 'Pacote não encontrado' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao atualizar' });
+    }
 });
 
 module.exports = router;

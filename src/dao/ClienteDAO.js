@@ -1,21 +1,31 @@
-const db = require('../database/db');
+const connectToDatabase = require('../database/db');
+const ClienteModel = require('../models/Cliente');
 
 class ClienteDAO {
-    create(cliente) {
-        db.clientes.push(cliente);
-        return cliente;
+    async create(clienteData) {
+        await connectToDatabase();
+        return await ClienteModel.create(clienteData);
     }
 
-    findAll() {
-        return db.clientes;
+    async findAll() {
+        await connectToDatabase();
+        return await ClienteModel.find({});
     }
 
-    findByEmail(email) {
-        return db.clientes.find(c => c.email === email);
+    async findByEmail(email) {
+        await connectToDatabase();
+        return await ClienteModel.findOne({ email });
     }
-    
-    findById(id) {
-        return db.clientes.find(c => c.id === id);
+
+    async delete(id) {
+        await connectToDatabase();
+        const result = await ClienteModel.findByIdAndDelete(id);
+        return !!result; // Retorna true se deletou
+    }
+
+    async update(id, dados) {
+        await connectToDatabase();
+        return await ClienteModel.findByIdAndUpdate(id, dados, { new: true });
     }
 }
 module.exports = new ClienteDAO();

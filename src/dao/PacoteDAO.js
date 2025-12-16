@@ -1,17 +1,26 @@
-const db = require('../database/db');
+const connectToDatabase = require('../database/db');
+const PacoteModel = require('../models/Pacote');
 
 class PacoteDAO {
-    create(pacote) {
-        db.pacotes.push(pacote);
-        return pacote;
+    async create(pacoteData) {
+        await connectToDatabase();
+        return await PacoteModel.create(pacoteData);
     }
 
-    findAll() {
-        return db.pacotes;
+    async findAll() {
+        await connectToDatabase();
+        return await PacoteModel.find({});
     }
 
-    findById(id) {
-        return db.pacotes.find(p => p.id === id);
+    async delete(id) {
+        await connectToDatabase();
+        const result = await PacoteModel.findByIdAndDelete(id);
+        return !!result;
+    }
+
+    async update(id, dados) {
+        await connectToDatabase();
+        return await PacoteModel.findByIdAndUpdate(id, dados, { new: true });
     }
 }
 module.exports = new PacoteDAO();
