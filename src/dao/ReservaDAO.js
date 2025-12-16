@@ -1,6 +1,6 @@
 const connectToDatabase = require('../database/db');
 const ReservaModel = require('../models/Reserva');
-require('../models/Cliente'); 
+require('../models/Cliente');
 require('../models/Pacote');
 
 class ReservaDAO {
@@ -11,24 +11,30 @@ class ReservaDAO {
 
     async findAllEnriched() {
         await connectToDatabase();
+        
+        if (!ReservaModel || !ReservaModel.find) {
+            console.error("ERRO CRÍTICO: ReservaModel não foi carregado corretamente!");
+            throw new Error("Model Reserva inválido");
+        }
+
         const reservas = await ReservaModel.find({})
             .populate('clienteId')
             .populate('pacoteId');
 
         return reservas.map(r => {
-            const doc = r.toJSON();
+            if (!r) return null;
+            const doc = r.toJSON ? r.toJSON() : r;
             return {
                 ...doc,
-                cliente: doc.clienteId, 
-                pacote: doc.pacoteId
+                cliente: doc.clienteId || null,
+                pacote: doc.pacoteId || null
             };
         });
     }
 
     async delete(id) {
         await connectToDatabase();
-        const result = await ReservaModel.findByIdAndDelete(id);
-        return !!result;
+        return await ReservaModel.findByIdAndDelete(id);
     }
 
     async update(id, dados) {
@@ -36,4 +42,5 @@ class ReservaDAO {
         return await ReservaModel.findByIdAndUpdate(id, dados, { new: true });
     }
 }
+
 module.exports = new ReservaDAO();
