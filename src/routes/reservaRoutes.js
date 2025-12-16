@@ -3,12 +3,14 @@ const router = express.Router();
 const ReservaDAO = require('../dao/ReservaDAO');
 
 
-router.get('/', async (req, res) => { 
+router.get('/', async (req, res) => {
     try {
         const dados = await ReservaDAO.findAllEnriched();
         res.json(dados);
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao buscar reservas' });
+        // 👇 ISSO VAI MOSTRAR O ERRO REAL NO LOG DA VERCEL
+        console.error("ERRO GRAVE NA ROTA RESERVAS:", error); 
+        res.status(500).json({ error: 'Erro interno ao buscar reservas' });
     }
 });
 

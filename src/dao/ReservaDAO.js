@@ -1,5 +1,7 @@
 const connectToDatabase = require('../database/db');
 const ReservaModel = require('../models/Reserva');
+require('../models/Cliente'); 
+require('../models/Pacote');
 
 class ReservaDAO {
     async create(reservaData) {
