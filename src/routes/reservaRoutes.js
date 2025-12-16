@@ -8,7 +8,6 @@ router.get('/', async (req, res) => {
         const dados = await ReservaDAO.findAllEnriched();
         res.json(dados);
     } catch (error) {
-        // 👇 ISSO VAI MOSTRAR O ERRO REAL NO LOG DA VERCEL
         console.error("ERRO GRAVE NA ROTA RESERVAS:", error); 
         res.status(500).json({ error: 'Erro interno ao buscar reservas' });
     }

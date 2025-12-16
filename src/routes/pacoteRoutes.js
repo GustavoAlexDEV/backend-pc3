@@ -5,12 +5,11 @@ const PacoteDAO = require('../dao/PacoteDAO');
 
 router.post('/', async (req, res) => {
     try {
-        console.log("Tentando criar pacote:", req.body); // Log para ver o que chega
+        console.log("Tentando criar pacote:", req.body);
 
         const criado = await PacoteDAO.create(req.body);
         res.status(201).json(criado);
     } catch (error) {
-        // 👇 ISSO É O MAIS IMPORTANTE: VAI APARECER NO LOG DA VERCEL
         console.error("ERRO AO CRIAR PACOTE:", error); 
         res.status(500).json({ error: 'Erro ao criar pacote: ' + error.message });
     }

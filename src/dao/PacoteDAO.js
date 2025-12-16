@@ -1,10 +1,9 @@
 const connectToDatabase = require('../database/db');
-const PacoteModel = require('../models/Pacote'); // <--- Sem { }
+const PacoteModel = require('../models/Pacote'); 
 
 class PacoteDAO {
     async create(pacoteData) {
         await connectToDatabase();
-        // Se PacoteModel for undefined, aqui dá erro 500
         return await PacoteModel.create(pacoteData); 
     }
 
